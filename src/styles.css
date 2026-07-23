@@ -68,10 +68,20 @@ header { padding-bottom: 18px; border-bottom: 2px solid var(--text); }
 .info-card > p { margin: 18px 0 0; max-width: 720px; color: var(--muted); font-size: 14px; line-height: 1.6; }
 .code-block { margin: 18px 0 0; padding: 16px 18px; border: 2px solid var(--line); border-radius: 10px; background: var(--bg); overflow-x: auto; font-size: 12.5px; line-height: 1.6; color: #c9d1d9; }
 
-footer { margin-top: 44px; padding-top: 18px; border-top: 2px solid var(--line); color: var(--muted); font-size: 11px; text-align: center; }
+footer { display: flex; flex-direction: column; gap: 6px; margin-top: 44px; padding-top: 18px; border-top: 2px solid var(--line); color: var(--muted); font-size: 11px; text-align: center; }
+footer a { color: var(--muted); text-decoration: underline; }
+footer a:hover { color: var(--accent); }
+.powered-badge { color: var(--muted); font-size: 10px; }
 
 @media (max-width: 640px) {
   .app-shell { padding: 18px 14px 44px; }
   .control-actions { margin-left: 0; width: 100%; }
   .bars { height: 200px; }
 }
+
+.cookie-consent { position: fixed; z-index: 50; left: 20px; right: 20px; bottom: 20px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px; max-width: 640px; margin: 0 auto; padding: 18px 20px; border: 2px solid var(--text); border-radius: 10px; background: var(--panel); box-shadow: 6px 6px 0 0 var(--shadow); }
+.cookie-consent p { flex: 1 1 260px; margin: 0; font-size: 13px; color: var(--muted); }
+.cookie-actions { display: flex; gap: 10px; }
+.cookie-actions button { padding: 9px 16px; border: 2px solid var(--text); border-radius: 8px; font-weight: 700; font-size: 13px; cursor: pointer; }
+.cookie-reject { background: none; color: var(--text); }
+.cookie-accept { background: var(--accent-2); color: #171410; }

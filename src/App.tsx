@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { isSortKey, searchKeys, searchers, sortKeys, sorters, type AlgoKey } from './data/algorithms'
 import { algoInfo } from './data/info'
+import { getStoredConsent, loadAnalytics } from './analytics'
+import CookieConsent from './CookieConsent'
 
 const SIZE = 40
 type Speed = 'slow' | 'normal' | 'fast'
@@ -24,6 +26,10 @@ export default function App() {
   const [status, setStatus] = useState<'idle' | 'running' | 'done' | 'found' | 'not-found'>('idle')
   const [target, setTarget] = useState<number | null>(null)
   const [searchRange, setSearchRange] = useState<{ lo: number; hi: number } | null>(null)
+
+  useEffect(() => {
+    if (getStoredConsent() === 'granted') loadAnalytics()
+  }, [])
   const [foundIndex, setFoundIndex] = useState<number | null>(null)
 
   const info = algoInfo[algorithm]
@@ -195,5 +201,6 @@ export default function App() {
       <a href="https://vibe-portfolio-one.vercel.app/" target="_blank" rel="noreferrer">Created by Bruno Rendeiro</a>
       <span className="powered-badge">⚡ Powered by AI</span>
     </footer>
+    <CookieConsent />
   </div>
 }
