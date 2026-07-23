@@ -60,17 +60,22 @@ export function mergeSort(input: number[]): SortStep[] {
   function merge(lo: number, mid: number, hi: number) {
     const left = array.slice(lo, mid + 1)
     const right = array.slice(mid + 1, hi + 1)
+    const merged: number[] = []
     let i = 0
     let j = 0
-    let k = lo
+    // Compare into a separate buffer first (not writing into `array` yet) so
+    // the [lo + i, mid + 1 + j] snapshot indices still point at the original,
+    // un-overwritten left/right values instead of already-merged output.
     while (i < left.length && j < right.length) {
       steps.push(snapshot(array, [lo + i, mid + 1 + j], false))
-      if (left[i] <= right[j]) { array[k] = left[i]; i++ } else { array[k] = right[j]; j++ }
-      steps.push(snapshot(array, [k], true))
-      k++
+      if (left[i] <= right[j]) { merged.push(left[i]); i++ } else { merged.push(right[j]); j++ }
     }
-    while (i < left.length) { array[k] = left[i]; steps.push(snapshot(array, [k], true)); i++; k++ }
-    while (j < right.length) { array[k] = right[j]; steps.push(snapshot(array, [k], true)); j++; k++ }
+    while (i < left.length) { merged.push(left[i]); i++ }
+    while (j < right.length) { merged.push(right[j]); j++ }
+    for (let k = 0; k < merged.length; k++) {
+      array[lo + k] = merged[k]
+      steps.push(snapshot(array, [lo + k], true))
+    }
   }
 
   function sort(lo: number, hi: number) {

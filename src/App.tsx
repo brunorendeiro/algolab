@@ -70,9 +70,9 @@ export default function App() {
     if (isRunning) return
     setIsRunning(true)
     resetVisualState()
-    setStatus('running')
 
     if (isSort) {
+      setStatus('running')
       const steps = sorters[algorithm](array)
       let last = array
       for (const step of steps) {
@@ -91,6 +91,7 @@ export default function App() {
       }
       const searchTarget = pickTarget(workingArray)
       setTarget(searchTarget)
+      setStatus('running')
       const steps = searchers[algorithm](workingArray, searchTarget)
       let found = false
       for (const step of steps) {
@@ -189,6 +190,10 @@ export default function App() {
       </section>
     </main>
 
-    <footer>Pure client-side: every algorithm runs for real on your array, no pre-baked animation.</footer>
+    <footer>
+      <span>Pure client-side: every algorithm runs for real on your array, no pre-baked animation.</span>
+      <a href="https://vibe-portfolio-one.vercel.app/" target="_blank" rel="noreferrer">Created by Bruno Rendeiro</a>
+      <span className="powered-badge">⚡ Powered by AI</span>
+    </footer>
   </div>
 }
