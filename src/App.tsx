@@ -127,11 +127,21 @@ export default function App() {
 
   return <div className="app-shell">
     <header>
-      <div className="brand"><span className="brand-mark">AL</span><div><strong>AlgoLab</strong><small>Sorting &amp; searching, visualized</small></div></div>
+      <div className="brand">
+        <span className="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 3h6M9 3v6.5L3.6 18.2A2 2 0 0 0 5.4 21h13.2a2 2 0 0 0 1.8-2.8L15 9.5V3" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" strokeLinecap="round" fill="currentColor" fillOpacity=".18" />
+            <circle cx="10.5" cy="18" r="1.1" fill="currentColor" />
+            <circle cx="14" cy="15.5" r="0.9" fill="currentColor" />
+            <circle cx="13" cy="18.8" r="0.6" fill="currentColor" />
+          </svg>
+        </span>
+        <div><strong>AlgoLab</strong><small>A lab notebook for sorting &amp; searching</small></div>
+      </div>
     </header>
 
     <main>
-      <p className="intro">Pick an algorithm, watch it run bar by bar, and read the real code alongside its complexity.</p>
+      <p className="intro">Pick a specimen, run the experiment, and read the method — <em>the actual code</em> — while it happens.</p>
 
       <section className="controls">
         <div className="control-group wide">
@@ -187,7 +197,7 @@ export default function App() {
           <div className="complexity">
             <div><span>Best</span><strong>{info.best}</strong></div>
             <div><span>Average</span><strong>{info.average}</strong></div>
-            <div><span>Worst</span><strong>{info.worst}</strong></div>
+            <div className="worst"><span>Worst</span><strong>{info.worst}</strong></div>
             <div><span>Space</span><strong>{info.space}</strong></div>
           </div>
         </div>
