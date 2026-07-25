@@ -187,7 +187,7 @@ header { padding-bottom: 16px; border-bottom: 2.5px solid var(--ink); }
   line-height: 1.65; color: #1c2230;
 }
 .code-block::before {
-  content: 'SOURCE'; position: absolute; top: -17px; left: 14px; padding: 5px 14px;
+  content: 'SOURCE'; display: block; width: max-content; margin: 0 0 14px; padding: 5px 14px;
   line-height: 1; white-space: nowrap; background: var(--ink); color: var(--paper-card); font-size: 12px; font-weight: 700;
   letter-spacing: .1em; border-radius: 3px; box-shadow: 0 2px 4px rgba(0,0,0,.25);
 }
