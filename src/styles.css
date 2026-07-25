@@ -181,15 +181,15 @@ header { padding-bottom: 16px; border-bottom: 2.5px solid var(--ink); }
 .info-card > p { margin: 20px 0 0; max-width: 720px; color: var(--ink-soft); font-size: 13.5px; line-height: 1.65; }
 
 .code-block {
-  position: relative; margin: 20px 0 0 18px; padding: 18px 20px 18px 26px;
+  position: relative; margin: 26px 0 0 18px; padding: 18px 20px 18px 26px;
   border: 1.5px solid var(--ink-faint); border-radius: 3px; background: #fffdf6;
   overflow-x: auto; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12.5px;
   line-height: 1.65; color: #1c2230;
 }
 .code-block::before {
-  content: 'SOURCE'; position: absolute; top: -11px; left: 14px; padding: 3px 8px 2px;
-  line-height: 1; background: var(--ink); color: var(--paper-card); font-size: 9px; font-weight: 700;
-  letter-spacing: .14em; border-radius: 2px;
+  content: 'SOURCE'; position: absolute; top: -17px; left: 14px; padding: 5px 14px;
+  line-height: 1; white-space: nowrap; background: var(--ink); color: var(--paper-card); font-size: 12px; font-weight: 700;
+  letter-spacing: .1em; border-radius: 3px; box-shadow: 0 2px 4px rgba(0,0,0,.25);
 }
 .code-block::after {
   content: ''; position: absolute; top: 0; bottom: 0; left: -18px; width: 12px;
