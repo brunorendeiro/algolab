@@ -187,7 +187,7 @@ header { padding-bottom: 16px; border-bottom: 2.5px solid var(--ink); }
   display: block; margin-top: 4px; color: var(--ink); font: 700 17px 'Kalam', cursive;
   text-decoration: underline wavy var(--teal) 1.6px; text-underline-offset: 3px;
 }
-.complexity div.worst strong { text-decoration-color: var(--red); }
+.complexity div.worst strong { text-decoration: underline solid var(--red) 1.6px; }
 .complexity div.worst::after {
   content: '↳ the one that hurts'; position: absolute; top: -16px; left: 2px;
   font: 400 10.5px 'Kalam', cursive; color: var(--red); white-space: nowrap; opacity: .85;
