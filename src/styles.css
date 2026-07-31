@@ -103,6 +103,16 @@ header { padding-bottom: 16px; border-bottom: 2.5px solid var(--ink); }
 }
 .segmented button:disabled { opacity: .5; cursor: default; }
 
+.range-inputs { display: flex; align-items: center; gap: 8px; }
+.range-inputs span { color: var(--ink-soft); font-size: 12px; font-family: 'Kalam', cursive; }
+.range-inputs input {
+  width: 84px; padding: 8px 10px; border: 1.5px dashed var(--ink-faint); border-radius: 4px;
+  background: var(--paper-card); color: var(--ink); font: 600 12px 'IBM Plex Mono', monospace;
+}
+.range-inputs input:focus { outline: none; border-style: solid; border-color: var(--ink); }
+.range-inputs input:disabled { opacity: .5; }
+.range-inputs input::-webkit-inner-spin-button { opacity: 1; }
+
 .control-actions { display: flex; gap: 12px; margin-left: auto; }
 .primary, .ghost {
   padding: 11px 20px; border: 2px solid var(--ink); border-radius: 7px 11px 8px 12px;
@@ -143,11 +153,15 @@ header { padding-bottom: 16px; border-bottom: 2.5px solid var(--ink); }
 }
 .bars::before { left: 22px; transform: rotate(-7deg); }
 .bars::after { right: 30px; transform: rotate(5deg); background: var(--teal); }
-.bar { flex: 1; min-width: 4px; background: var(--ink); opacity: .78; border-radius: 2px 2px 0 0; transition: background .15s ease, opacity .15s ease; }
+.bar { position: relative; flex: 1; min-width: 4px; background: var(--ink); opacity: .78; border-radius: 2px 2px 0 0; transition: background .15s ease, opacity .15s ease, height .15s ease; }
 .bar.active { background: var(--amber); opacity: 1; }
 .bar.sorted { background: var(--teal); opacity: 1; }
 .bar.found { background: var(--teal); opacity: 1; }
 .bar.dimmed { background: var(--ink-faint); opacity: .4; }
+.bar-value {
+  position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+  margin-bottom: 5px; font-size: 11px; font-weight: 700; color: var(--ink); white-space: nowrap;
+}
 
 /* ---------- info card (lab report) ---------- */
 .info-card {

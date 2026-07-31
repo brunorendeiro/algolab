@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { isSortKey, searchKeys, searchers, sortKeys, sorters, type AlgoKey } from './data/algorithms'
+import { isNumberKey, isSortKey, numberGenerators, numberKeys, numberRangeConfig, searchKeys, searchers, sortKeys, sorters, type AlgoKey, type NumberKey } from './data/algorithms'
 import { algoInfo } from './data/info'
 import { getStoredConsent, loadAnalytics } from './analytics'
 import CookieConsent from './CookieConsent'
@@ -26,6 +26,10 @@ export default function App() {
   const [status, setStatus] = useState<'idle' | 'running' | 'done' | 'found' | 'not-found'>('idle')
   const [target, setTarget] = useState<number | null>(null)
   const [searchRange, setSearchRange] = useState<{ lo: number; hi: number } | null>(null)
+  const [eliminated, setEliminated] = useState<number[]>([])
+  const [numberLabel, setNumberLabel] = useState('')
+  const [rangeMin, setRangeMin] = useState(numberRangeConfig.fibonacci.defaultMin)
+  const [rangeMax, setRangeMax] = useState(numberRangeConfig.fibonacci.defaultMax)
 
   useEffect(() => {
     if (getStoredConsent() === 'granted') loadAnalytics()
@@ -34,17 +38,25 @@ export default function App() {
 
   const info = algoInfo[algorithm]
   const isSort = isSortKey(algorithm)
+  const isNumber = isNumberKey(algorithm)
 
   function resetVisualState() {
     setActive([])
     setSortedCount(0)
     setSearchRange(null)
     setFoundIndex(null)
+    setEliminated([])
+    setNumberLabel('')
     setStatus('idle')
   }
 
   function newArray() {
     if (isRunning) return
+    if (isNumber) {
+      resetVisualState()
+      setArray([])
+      return
+    }
     setArray(randomArray(SIZE))
     setTarget(null)
     resetVisualState()
@@ -55,6 +67,23 @@ export default function App() {
     setAlgorithm(next)
     setTarget(null)
     resetVisualState()
+    if (isNumberKey(next)) {
+      setArray([])
+      setRangeMin(numberRangeConfig[next].defaultMin)
+      setRangeMax(numberRangeConfig[next].defaultMax)
+    } else if (array.length !== SIZE) {
+      setArray(randomArray(SIZE))
+    }
+  }
+
+  function updateRange(which: 'min' | 'max', raw: string) {
+    if (!isNumber) return
+    const cfg = numberRangeConfig[algorithm as NumberKey]
+    const value = Math.round(Number(raw))
+    if (Number.isNaN(value)) return
+    const clamped = Math.min(cfg.max, Math.max(cfg.min, value))
+    if (which === 'min') setRangeMin(clamped)
+    else setRangeMax(clamped)
   }
 
   function pickTarget(source: number[]): number {
@@ -88,6 +117,21 @@ export default function App() {
         await sleep(speedDelay[speed])
       }
       await sweepSorted(last)
+    } else if (isNumber) {
+      setStatus('running')
+      setArray([])
+      const lo = Math.min(rangeMin, rangeMax)
+      const hi = Math.max(rangeMin, rangeMax)
+      const { steps, label } = numberGenerators[algorithm](lo, hi)
+      setNumberLabel(label)
+      const stepDelay = algorithm === 'gcd' ? speedDelay[speed] * 7 : algorithm === 'sieve' ? speedDelay[speed] : speedDelay[speed] * 3
+      for (const step of steps) {
+        setArray(step.array)
+        setActive(step.active)
+        setEliminated(step.eliminated)
+        await sleep(stepDelay)
+      }
+      setStatus(steps.length ? 'done' : 'not-found')
     } else {
       let workingArray = array
       if (algorithm === 'binary') {
@@ -112,6 +156,13 @@ export default function App() {
   }
 
   const maxValue = Math.max(...array, 1)
+  const logGrowth = algorithm === 'fibonacci' || algorithm === 'factorial'
+
+  function barHeight(value: number): number {
+    const cap = isNumber && algorithm !== 'sieve' ? 82 : 100
+    if (logGrowth) return (Math.log(value + 1) / Math.log(maxValue + 1)) * cap
+    return (value / maxValue) * cap
+  }
 
   function barClass(index: number): string {
     if (isSort) {
@@ -119,10 +170,26 @@ export default function App() {
       if (active.includes(index)) return 'bar active'
       return 'bar'
     }
+    if (isNumber) {
+      if (eliminated.includes(index)) return 'bar dimmed'
+      if (algorithm === 'gcd') return status === 'done' ? 'bar found' : 'bar active'
+      if (algorithm === 'sieve') {
+        if (active.includes(index)) return 'bar active'
+        return status === 'done' ? 'bar sorted' : 'bar'
+      }
+      if (index === array.length - 1 && status === 'running') return 'bar active'
+      return 'bar sorted'
+    }
     if (foundIndex === index) return 'bar found'
     if (active.includes(index)) return 'bar active'
     if (algorithm === 'binary' && searchRange && (index < searchRange.lo || index > searchRange.hi)) return 'bar dimmed'
     return 'bar'
+  }
+
+  function numberDoneMessage(): string {
+    if (algorithm === 'gcd') return `${numberLabel} = ${array[0]}`
+    if (algorithm === 'sieve') return `${numberLabel} — found ${array.length - eliminated.length} primes.`
+    return `${numberLabel} — done!`
   }
 
   return <div className="app-shell">
@@ -136,7 +203,7 @@ export default function App() {
             <circle cx="13" cy="18.8" r="0.6" fill="currentColor" />
           </svg>
         </span>
-        <div><strong>AlgoLab</strong><small>A lab notebook for sorting &amp; searching</small></div>
+        <div><strong>AlgoLab</strong><small>A lab notebook for sorting, searching &amp; numbers</small></div>
       </div>
     </header>
 
@@ -160,6 +227,38 @@ export default function App() {
             ))}
           </div>
         </div>
+        <div className="control-group wide">
+          <span>Numbers</span>
+          <div className="segmented">
+            {numberKeys.map(key => (
+              <button key={key} className={algorithm === key ? 'active' : ''} disabled={isRunning} onClick={() => changeAlgorithm(key)}>{algoInfo[key].name}</button>
+            ))}
+          </div>
+        </div>
+        {isNumber && (
+          <div className="control-group">
+            <span>{numberRangeConfig[algorithm as NumberKey].fromLabel}</span>
+            <div className="range-inputs">
+              <input
+                type="number"
+                value={rangeMin}
+                disabled={isRunning}
+                min={numberRangeConfig[algorithm as NumberKey].min}
+                max={numberRangeConfig[algorithm as NumberKey].max}
+                onChange={e => updateRange('min', e.target.value)}
+              />
+              <span>{numberRangeConfig[algorithm as NumberKey].toLabel}</span>
+              <input
+                type="number"
+                value={rangeMax}
+                disabled={isRunning}
+                min={numberRangeConfig[algorithm as NumberKey].min}
+                max={numberRangeConfig[algorithm as NumberKey].max}
+                onChange={e => updateRange('max', e.target.value)}
+              />
+            </div>
+          </div>
+        )}
         <div className="control-group">
           <span>Speed</span>
           <div className="segmented">
@@ -170,21 +269,27 @@ export default function App() {
         </div>
         <div className="control-actions">
           <button className="primary" disabled={isRunning} onClick={run}>{isRunning ? 'Running…' : 'Run'}</button>
-          <button className="ghost" disabled={isRunning} onClick={newArray}>New array</button>
+          <button className="ghost" disabled={isRunning} onClick={newArray}>{isNumber ? 'New numbers' : 'New array'}</button>
         </div>
       </section>
 
       <p className={`status status-${status}`} role="status">
-        {status === 'idle' && 'Ready when you are.'}
-        {status === 'running' && (isSort ? 'Sorting…' : `Searching for ${target}…`)}
-        {status === 'done' && 'Sorted!'}
+        {status === 'idle' && (isNumber ? `Ready — ${info.name}.` : 'Ready when you are.')}
+        {status === 'running' && isSort && 'Sorting…'}
+        {status === 'running' && isNumber && `${numberLabel || info.name}…`}
+        {status === 'running' && !isSort && !isNumber && `Searching for ${target}…`}
+        {status === 'done' && isSort && 'Sorted!'}
+        {status === 'done' && isNumber && numberDoneMessage()}
         {status === 'found' && `Found ${target} at index ${foundIndex}.`}
-        {status === 'not-found' && `${target} isn't in the array.`}
+        {status === 'not-found' && isNumber && numberLabel}
+        {status === 'not-found' && !isNumber && `${target} isn't in the array.`}
       </p>
 
       <div className="bars">
         {array.map((value, index) => (
-          <div key={index} className={barClass(index)} style={{ height: `${(value / maxValue) * 100}%` }} />
+          <div key={index} className={barClass(index)} style={{ height: `${barHeight(value)}%` }}>
+            {isNumber && algorithm !== 'sieve' && <span className="bar-value">{value}</span>}
+          </div>
         ))}
       </div>
 

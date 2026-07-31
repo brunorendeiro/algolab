@@ -2,7 +2,7 @@ import type { AlgoKey } from './algorithms'
 
 export type AlgoInfo = {
   name: string
-  category: 'Sorting' | 'Searching'
+  category: 'Sorting' | 'Searching' | 'Numbers'
   summary: string
   best: string
   average: string
@@ -99,5 +99,54 @@ while (lo <= hi) {
   else hi = mid - 1
 }
 return -1`,
+  },
+  fibonacci: {
+    name: 'Fibonacci Sequence',
+    category: 'Numbers',
+    summary: 'Builds the sequence iteratively, where each new term is the sum of the previous two — the classic warm-up interview question, usually followed by "now do it without recursion."',
+    best: 'O(n)', average: 'O(n)', worst: 'O(n)', space: 'O(1)',
+    code: `let seq = []
+for (let i = 0; ; i++) {
+  const value = i < 2 ? i + 1 : seq[i - 1] + seq[i - 2]
+  if (value > max) break
+  seq.push(value)
+  if (value >= min) reveal(value)
+}`,
+  },
+  factorial: {
+    name: 'Factorial',
+    category: 'Numbers',
+    summary: 'Multiplies every integer from 1 up, one term at a time. Grows so fast that a handful of terms already dwarfs the earlier ones — a good excuse to talk about number overflow in interviews.',
+    best: 'O(n)', average: 'O(n)', worst: 'O(n)', space: 'O(1)',
+    code: `let product = 1
+for (let i = 1; ; i++) {
+  product *= i
+  if (product > max) break
+  if (product >= min) reveal(product)
+}`,
+  },
+  gcd: {
+    name: 'Greatest Common Divisor',
+    category: 'Numbers',
+    summary: "Euclid's algorithm: repeatedly replace the pair (a, b) with (b, a mod b) until b hits zero — the surviving value is the GCD. Same idea behind reducing a fraction to lowest terms.",
+    best: 'O(log(min(a,b)))', average: 'O(log(min(a,b)))', worst: 'O(log(min(a,b)))', space: 'O(1)',
+    code: `while (b !== 0) {
+  [a, b] = [b, a % b]
+}
+return a`,
+  },
+  sieve: {
+    name: 'Sieve of Eratosthenes',
+    category: 'Numbers',
+    summary: 'Starting from 2, crosses out every multiple of each surviving number. What is never crossed out is prime — far faster than checking each number for divisibility one by one.',
+    best: 'O(n log log n)', average: 'O(n log log n)', worst: 'O(n log log n)', space: 'O(n)',
+    code: `for (let p = 2; p * p <= max; p++) {
+  if (isPrime[p]) {
+    for (let m = p * p; m <= max; m += p) {
+      isPrime[m] = false
+    }
+  }
+}
+// reveal survivors where value >= min`,
   },
 }
