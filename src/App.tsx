@@ -194,7 +194,7 @@ export default function App() {
 
   return <div className="app-shell">
     <header>
-      <div className="brand">
+      <h1 className="brand">
         <span className="brand-mark" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M9 3h6M9 3v6.5L3.6 18.2A2 2 0 0 0 5.4 21h13.2a2 2 0 0 0 1.8-2.8L15 9.5V3" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" strokeLinecap="round" fill="currentColor" fillOpacity=".18" />
@@ -204,7 +204,7 @@ export default function App() {
           </svg>
         </span>
         <div><strong>AlgoLab</strong><small>A lab notebook for sorting, searching &amp; numbers</small></div>
-      </div>
+      </h1>
     </header>
 
     <main>

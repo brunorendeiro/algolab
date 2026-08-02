@@ -54,7 +54,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 /* ---------- header ---------- */
 header { padding-bottom: 16px; border-bottom: 2.5px solid var(--ink); }
-.brand { display: flex; align-items: center; gap: 14px; }
+.brand { display: flex; align-items: center; gap: 14px; margin: 0; }
 .brand-mark {
   display: grid; place-items: center; width: 46px; height: 46px;
   border: 2px solid var(--ink); border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
