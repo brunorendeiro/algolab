@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { isNumberKey, isSortKey, numberGenerators, numberKeys, numberRangeConfig, searchKeys, searchers, sortKeys, sorters, type AlgoKey, type NumberKey } from './data/algorithms'
 import { algoInfo } from './data/info'
-import { getStoredConsent, loadAnalytics } from './analytics'
+import { getStoredConsent, loadAnalytics, loadAds } from './analytics'
 import CookieConsent from './CookieConsent'
 
 const SIZE = 40
@@ -32,7 +32,10 @@ export default function App() {
   const [rangeMax, setRangeMax] = useState(numberRangeConfig.fibonacci.defaultMax)
 
   useEffect(() => {
-    if (getStoredConsent() === 'granted') loadAnalytics()
+    if (getStoredConsent() === 'granted') {
+      loadAnalytics()
+      loadAds()
+    }
   }, [])
   const [foundIndex, setFoundIndex] = useState<number | null>(null)
 
