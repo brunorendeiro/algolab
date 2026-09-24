@@ -3,6 +3,7 @@ import { isNumberKey, isSortKey, numberGenerators, numberKeys, numberRangeConfig
 import { algoInfo } from './data/info'
 import { getStoredConsent, loadAnalytics, loadAds } from './analytics'
 import CookieConsent from './CookieConsent'
+import AdSlot from './AdSlot'
 
 const SIZE = 40
 type Speed = 'slow' | 'normal' | 'fast'
@@ -311,6 +312,7 @@ export default function App() {
         </div>
         <p>{info.summary}</p>
         <pre className="code-block"><code>{info.code}</code></pre>
+        <AdSlot />
       </section>
     </main>
 
